@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         Debug.Log(enemyCount);
-        if(enemyCount >= 5)
+        if(enemyCount >= 20)
         {
             SceneManager.LoadScene("Scene_Win");
         }

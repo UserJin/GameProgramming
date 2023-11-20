@@ -24,12 +24,18 @@ public class BulletCtrl : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // 적 또는 장애물과 충돌하면 파괴
+    // 총알 피해 및 파괴
     private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.tag == "_Enemy")
+        if (other.gameObject.CompareTag("_Enemy") && gameObject.CompareTag("_Bullet"))
         {
             other.gameObject.GetComponent<Enemy>().HitProjectile(1);
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+        else if(other.gameObject.CompareTag("_Player") && gameObject.CompareTag("_BulletE"))
+        {
+            other.gameObject.GetComponent<PlayerCtrl>().PlayerHit(1);
+            Destroy(gameObject);
+        }
+        else if(!other.gameObject.CompareTag("_Player") && !other.gameObject.CompareTag("_Enemy")) Destroy(gameObject);
     }
 }

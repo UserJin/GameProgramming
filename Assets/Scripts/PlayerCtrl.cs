@@ -5,9 +5,8 @@ using UnityEngine.VFX;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    public float hp = 100.0f;
+    public float hp = 10.0f;
     public float damage = 10.0f;
-    public float fuel = 100.0f;
     public float moveSpeed = 5.0f;
     public float turnSpeed = 100.0f;
     public int dashScale = 1;

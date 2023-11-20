@@ -7,12 +7,20 @@ public class Enemy : MonoBehaviour
     public int hp = 3;
     public int damage = 5;
     public float speed = 5.0f;
-    public bool isDead = false;
+
+    public float traceDist;
+    public float attackDist;
+    public float attackCoolTime = 1.0f;
+    public float attackCoolTimeMax = 1.0f;
+
 
     public GameObject playerBase;
     public GameObject player;
     
     private Rigidbody rb;
+
+    public GameObject bullet;
+    public Transform firePoint;
 
     public enum State
     {
@@ -30,12 +38,14 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindWithTag("_Player");
         playerBase = GameObject.FindWithTag("_Base");
         rb = this.GetComponent<Rigidbody>();
+        attackCoolTime = 1.0f;
         state = State.MOVE;
     }
 
     // Update is called once per frame
     void Update()
     {
+        float distance;
         switch(state)
         {
             case State.MOVE: //Move
@@ -43,35 +53,72 @@ public class Enemy : MonoBehaviour
                 {
                     Transform tr_Base = playerBase.transform;
                     Vector3 dir = tr_Base.position - transform.position;
-                    transform.Translate(dir.normalized * speed * Time.deltaTime);
-                    //transform.LookAt(new Vector3(tr_Base.position.x, 0, tr_Base.position.z));
+                    Debug.DrawRay(transform.position, dir * 2, Color.green);
+                    //transform.Translate(dir.normalized * speed * Time.deltaTime);
+                    transform.position += dir.normalized * speed * Time.deltaTime;
+                    transform.LookAt(new Vector3(tr_Base.position.x, transform.position.y, tr_Base.position.z));
                 }
-                float distance = Vector3.Distance(transform.position, player.transform.position);
-
+                distance = Vector3.Distance(transform.position, player.transform.position);
+                if (distance <= traceDist) state = State.TRACE;
+                else if (distance <= attackDist) state = State.ATTACK;
                 break;
             case State.TRACE:
+                if(player != null)
+                {
+                    Transform tr_Player = player.transform;
+                    Vector3 dir = tr_Player.position - transform.position;
+                    Debug.DrawRay(transform.position, dir * 3, Color.red);
+                    //transform.Translate(dir.normalized * speed * Time.deltaTime);
+                    transform.position += dir.normalized * speed * Time.deltaTime;
+                    transform.LookAt(new Vector3(tr_Player.position.x, transform.position.y, tr_Player.position.z));
+                }
+                distance = Vector3.Distance(transform.position, player.transform.position);
+                if (distance > traceDist) state = State.MOVE;
+                else if (distance <= attackDist) state = State.ATTACK;
                 break;
             case State.ATTACK:
+                if (player != null)
+                {
+                    Transform tr_Player = player.transform;
+                    Vector3 dir = tr_Player.position - transform.position;
+                    //transform.Translate(dir.normalized * speed * Time.deltaTime);
+                    transform.position += dir.normalized * speed * Time.deltaTime;
+                    attackCoolTime += Time.deltaTime;
+                    if (attackCoolTime >= attackCoolTimeMax) Attack();
+                    transform.LookAt(new Vector3(tr_Player.position.x, transform.position.y, tr_Player.position.z));
+                }
+                distance = Vector3.Distance(transform.position, player.transform.position);
+                if (distance > traceDist) state = State.MOVE;
+                else if (distance > attackDist) state = State.TRACE;
                 break;
             case State.DIE:
+                GameManager.instance.enemyCount += 1;
+                DestroyEnemy();
                 break;
 
 
         }
-        
-        // 체력이 모두 소진되면 키네마틱 해제 및 3초 뒤 제거
-        if(hp <= 0 && !isDead)
-        {
-            GameManager.instance.enemyCount += 1;
-            this.rb.isKinematic = false;
-            Invoke("DestroyEnemy", 3.0f);
-            isDead = true;
-        }
+        if (hp <= 0) state = State.DIE;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, traceDist);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackDist);
+    }
+
+    public void Attack()
+    {
+        Instantiate(bullet, firePoint.position, firePoint.rotation);
+        attackCoolTime = 0;
     }
 
     public void HitProjectile(int n)
     {
         hp -= n;
+        if (hp <= 0) state = State.DIE;
     }
 
     void DestroyEnemy(){

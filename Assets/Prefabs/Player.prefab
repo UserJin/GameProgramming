@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 880514863763113773}
   - component: {fileID: 1907335826465895698}
   m_Layer: 0
-  m_Name: ShootFX
+  m_Name: MuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -393,11 +393,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca98b18e9d4d83d4aaaf095b5e823025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
+  hp: 10
   damage: 10
-  fuel: 100
   moveSpeed: 25
-  turnSpeed: 100
+  turnSpeed: 200
   dashScale: 1
   jumpPower: 10
   bullet: {fileID: 829645089749330419, guid: a82fb425ea70fbd4abba9ab1ff21c56e, type: 3}
@@ -612,15 +611,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5305708014175920076}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52d59bcfdbf371e43bb7f349b9eb124e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target_tr: {fileID: 1930988686785587201}
   distanceX: 1
-  distanceY: 2.5
-  distanceZ: -2
+  distanceY: 2.3
+  distanceZ: -1.4
   damping: 1
 --- !u!1 &5398032205805535973
 GameObject:

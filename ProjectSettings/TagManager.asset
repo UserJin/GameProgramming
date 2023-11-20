@@ -10,6 +10,7 @@ TagManager:
   - _Granade
   - _Player
   - _Base
+  - _BulletE
   layers:
   - Default
   - TransparentFX
