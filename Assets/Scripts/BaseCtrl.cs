@@ -9,7 +9,7 @@ public class BaseCtrl : MonoBehaviour
     public int hp_base;
     void Start()
     {
-        hp_base = 5;
+        hp_base = 10;
     }
 
     // Update is called once per frame

@@ -5,6 +5,8 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemy;
+    [SerializeField] float spawnTime = 5.0f;
+    [SerializeField] float spawnStartTime = 10.0f;
 
     public List<Transform> spawnPoints = new List<Transform>();
     // Start is called before the first frame update
@@ -14,8 +16,8 @@ public class EnemySpawner : MonoBehaviour
         {
             spawnPoints.Add(point);
         }
-        // 게임 시작 1초 뒤부터 2초 간격으로 적 생성
-        InvokeRepeating("SpawnEnemy", 1.0f, 2.0f);
+        // 게임 시작 1초 뒤부터 3초 간격으로 적 생성
+        InvokeRepeating("SpawnEnemy", spawnStartTime, spawnTime);
     }
 
 
